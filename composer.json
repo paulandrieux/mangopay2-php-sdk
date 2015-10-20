@@ -6,5 +6,9 @@
     "autoload": {
         "psr-4": { "MangoPay\\": "" },
         "files": ["MangoPay/Autoloader.php"]
+    },
+    "branch-alias": {
+        "dev-master": "v2.0"
     }
+
 }

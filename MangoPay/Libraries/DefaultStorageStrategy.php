@@ -37,16 +37,16 @@ class DefaultStorageStrategy implements IStorageStrategy {
      * @param \MangoPay\Libraries\OAuthToken $token Token instance to be stored.
      */
     public function Store($token) {
-        
-        if (!is_writable($this->GetPathToTemporaryFolder()))
-            throw new \MangoPay\Libraries\Exception('Cannot create or write to file ' . $this->GetPathToTemporaryFolder());
-        
-        $serialized = serialize($token);
-        $path = $this->GetPathToFile();
+
+        $path = $this->GetPathToTemporaryFolder();
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
-        $result = file_put_contents($path, $this->_prefixContent . $serialized, LOCK_EX);
+        if (!is_writable($path))
+            throw new \MangoPay\Libraries\Exception('Cannot create or write to file ' . $this->GetPathToTemporaryFolder());
+
+        $serialized = serialize($token);
+        $result = file_put_contents($this->GetPathToFile(), $this->_prefixContent . $serialized, LOCK_EX);
         if ($result === false)
             throw new \MangoPay\Libraries\Exception('Cannot put token to file');
     }
