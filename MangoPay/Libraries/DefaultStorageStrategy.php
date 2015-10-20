@@ -42,7 +42,11 @@ class DefaultStorageStrategy implements IStorageStrategy {
             throw new \MangoPay\Libraries\Exception('Cannot create or write to file ' . $this->GetPathToTemporaryFolder());
         
         $serialized = serialize($token);
-        $result = file_put_contents($this->GetPathToFile(), $this->_prefixContent . $serialized, LOCK_EX);
+        $path = $this->GetPathToFile();
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        $result = file_put_contents($path, $this->_prefixContent . $serialized, LOCK_EX);
         if ($result === false)
             throw new \MangoPay\Libraries\Exception('Cannot put token to file');
     }
